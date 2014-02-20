@@ -1,8 +1,9 @@
+import easygui as eg
 import urllib
 import urllib2
 import json
 import time
-import hmac,hashlib
+import hmac,hashlib, sys
 
 def createTimeStamp(datestr, format="%Y-%m-%d %H:%M:%S"):
     return time.mktime(time.strptime(datestr, format))
@@ -260,3 +261,87 @@ class Cryptsy:
             return None
 
         return self.api_query('generatenewaddress', req)
+
+
+def main():
+    fnames = eg.multenterbox('Enter Apikey and Secret for Cryptsy', 
+                             'Cryptsy with EasyGui', ('Api Key', 'Secret'))
+    apikey = fnames[0].strip()
+    secret = fnames[1].strip()
+    my_crypt = Cryptsy(apikey, secret)
+    msg = 'Click the correct button'
+    title = 'Easy Gui for Cryptsy'
+    entries = ('Get Market Data', 'Get Market Data v2', 'Get Single Market Data',
+               'Get Order Book Data', 'Get Info', 'Get Markets', 'My Transactions', 
+               'Market Trades', 'Market Orders', 'My Trades', 'All My Trades',
+               'My Orders', 'Depth', 'All My Orders', 'Create Order', 'Cancel Order',
+               'Cancel Market Orders', 'Cancel All Orders', 'Calculate Fees', 
+               'Generate New Address')
+    fv = eg.choicebox(msg, title, entries)
+    print fv
+    if fv:
+        while 1:
+            if fv == entries[0]:
+                mycrypt.getMarketData()
+            elif fv == entries[1]:
+                mycrypt.getMarketDataV2()
+            elif fv == entries[2]:
+                user_inp = eg.enterbox('Enter the Market id')
+                mycrypt.getSingleMarketData(user_inp)
+            elif fv == entries[3]:
+                user_inp = eg.enterbox('Enter the Market id')
+                mycrypt.getOrderbookData(user_inp)
+            elif fv == entries[4]:
+                mycrypt.getInfo()
+            elif fv == entries[5]:
+                mycrypt.getMarkets()
+            elif fv == entries[6]:
+                mycrypt.myTransactions()
+            elif fv == entries[7]:
+                user_inp = eg.enterbox('Enter the Market id')
+                mycrypt.marketTrades(user_inp)
+            elif fv == entries[8]:
+                user_inp = eg.enterbox('Enter the Market id')
+                mycrypt.marketOrders(user_inp)
+            elif fv == entries[9]:
+                user_inp = eg.enterbox('Enter the Market id')
+                mycrypt.myTrades(user_inp)
+            elif fv == entries[10]:
+                mycrypt.allMyTrades()
+            elif fv == entries[11]:
+                user_inp = eg.enterbox('Enter the Market id')
+                mycrypt.myOrders(user_inp)
+            elif fv == entries[12]:
+                user_inp = eg.enterbox('Enter the Market id')
+                mycrypt.depth(user_inp)
+            elif fv == entries[13]:
+                mycrypt.allMyOrders()
+            elif fv == entries[14]:
+                user_inp1 = eg.enterbox('Enter the Market id')
+                user_inp2 = eg.enterbox('Enter the Order Type')
+                user_inp3 = eg.enterbox('Enter the Quantity')
+                user_inp4 = eg.enterbox('Enter the Price')
+                mycrypt.createOrder(user_inp1, user_inp2, user_inp3, user_inp4)
+            elif fv == entries[15]:
+                user_inp = eg.enterbox('Enter the Order id')
+                mycrypt.cancelOrder(user_inp)
+            elif fv == entries[16]:
+                user_inp = eg.enterbox('Enter the Market id')
+                mycrypt.cancelMarketOrders(user_inp)
+            elif fv == entries[17]:
+                mycrypt.cancelAllOrders()
+            elif fv == entries[18]:
+                user_inp1 = eg.enterbox('Enter the Order Type')
+                user_inp2 = eg.enterbox('Enter the Quantity')
+                user_inp3 = eg.enterbox('Enter the Price')
+                mycrypt.calculateFees(user_inp1, user_inp2, user_inp3)
+            elif fv == entries[19]:
+                user_inp1 = eg.enterbox('Enter the Curreny id')
+                user_inp2 = eg.enterbox('Enter the Curreny code')
+                mycrypt.generateNewAddress(user_inp1, user_inp2)
+           
+    else:
+        sys.exit(0)
+
+if __name__ == '__main__':
+    main()
